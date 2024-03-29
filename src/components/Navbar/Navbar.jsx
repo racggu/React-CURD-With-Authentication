@@ -19,6 +19,11 @@ const Navbar = () => {
         <nav className="hidden md:flex">
           <ul className="flex gap-8 text-xl text-black font-bold font-Pacifico">
             <li>
+              <Link to="/page1" className="hover:text-white">
+                Page1
+              </Link>
+            </li>
+            <li>
               <Link to="/" className="hover:text-white">
                 Home
               </Link>
