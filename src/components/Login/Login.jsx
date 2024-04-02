@@ -1,6 +1,21 @@
 import { Field, Formik, Form, ErrorMessage } from "formik";
 import { useLogin } from "./hook/useLogin";
+import axios from 'axios';
 
+const fetchData = async () => {
+  console.log("lakku1");
+  try {
+    let response = await axios.post('http://localhost:8080/api/v1/private/login', {
+      "password": "password",
+      "username": "admin@shopizer.com"
+    }
+    )
+    console.log("lakku2");
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const Login = ({setCurrInfo}) => {
   const{initialValues,handleLogin,loginSchema}=useLogin()
@@ -42,9 +57,10 @@ const Login = ({setCurrInfo}) => {
               <button
                 type="submit"
                 className="bg-red-400 w-auto p-4 rounded-xl text-white font-bold"
-               onClick={()=>{setCurrInfo(true)}}
+               onClick={fetchData}
               >
-                Login
+                
+                Login1
               </button>
             </div>
           </div>
