@@ -2,42 +2,11 @@ import React , { useState ,useEffect}from 'react'
 import {Tab, Tabs, Container, Row, Col, Button} from 'react-bootstrap';
 import Select from "react-select";
 import WebService from '../../api/webService';
-import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-const ProductDescriptionInfo = () => {
-	useEffect(() => {
-		// console.log(strings);
-		getDefualtsOption()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-	const getDefualtsOption = async () => {
-    try {
-      let response = await axios.get('http://localhost:8080/api/v1/category')
-      let modifiedArr = response.data.categories.map(function(element){
-        return { value: element.id , label: element.code };
-      });
-    
-      console.log(modifiedArr)
-      return(modifiedArr);
-      
-    } catch (error) {
-      console.log(error);
-    }
-	}
-}
+let modifiedArr =[]
 
 
-
-async function handleSubmit() {
-  try {
-    const response = await axios.get('http://localhost:8080/api/v1/category')
-    console.log(response.data);
-  } catch (error) {
-    console.log(error.message);
-  }
-}
 
 
 const options = [
@@ -69,6 +38,43 @@ const changeing = [
 ];
 
 const Page1 = () => {
+  const [categoryData, setCategoryData] = useState([]);
+  const ProductDescriptionInfo = async () => {
+
+    try {
+      let response = await WebService.get('http://localhost:8080/api/v1/category');
+
+      modifiedArr = response.categories.map(function(element){
+        return { value: element.id , label: element.code };
+      });
+    
+      return(modifiedArr);
+      
+      } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+		getCategoryHierarchy();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+  const getCategoryHierarchy = async () => {
+		try {
+			let response = await WebService.get('http://localhost:8080/api/v1/category');
+			if ( response ) {
+
+        modifiedArr = response.categories.map(function(element){
+          return { value: element.id , label: element.code };
+        }); 
+        setCategoryData(modifiedArr);
+			}
+		} catch (error) {
+			// console.log(error.messages)
+			// console.log(error)
+			// history.push('/not-found')
+		}
+	}
+
 
   const [selectedOption, setSelectedOption] = useState({
     fromCurrency: null,
@@ -106,23 +112,22 @@ const Page1 = () => {
 
   return (
     <Container>
-      <Row>
 
-         <div class="col col-lg-1">
+      <Row>
+         <div className="col col-lg-1">
           <Select
-              className="rounded-2xl w-56"
+
               value={selectedOption.fromCurrency}
               placeholder={"1차카타고리"}
               onChange={(selectedOption) =>
                 handleCurrencyChange("fromCurrency", selectedOption)
               }
-              options={options}
+              options={categoryData}
               isClearable
           />
         </div>
-        <div class="col col-lg-1">
+        <div className="col col-lg-1">
           <Select
-              className="rounded-2xl w-56"
               value={selectedOption.fromCurrency}
               placeholder={"2차카타고리"}
               onChange={(selectedOption) =>
@@ -132,9 +137,8 @@ const Page1 = () => {
               isClearable
           />
         </div>
-        <div class="col col-lg-1">
+        <div className="col col-lg-1">
           <Select
-              className="rounded-2xl w-56"
               value={selectedOption.fromCurrency}
               placeholder={"3차카타고리"}
               onChange={(selectedOption) =>
@@ -146,7 +150,7 @@ const Page1 = () => {
         </div>
         <div class="col col-lg-1">
           <Select
-              className="rounded-2xl w-56"
+              className="categoty004"
               value={selectedOption.fromCurrency}
               placeholder={"검색대상"}
               onChange={(selectedOption) =>
@@ -159,7 +163,7 @@ const Page1 = () => {
         <div class="col col-lg-1">
           <input
               type="text"
-              className="rounded-lg h-10"
+              className="categoty005"
               value={selectedOption.amount}
               onChange={handleAmountChange}
           />
@@ -173,7 +177,7 @@ const Page1 = () => {
           <Tabs
             defaultActiveKey="profile"
             id="fill-tab-example"
-            className="mb-3"
+            className="mb-categoty006"
             fill
           >
             <Tab eventKey="ALL" title="전체">
