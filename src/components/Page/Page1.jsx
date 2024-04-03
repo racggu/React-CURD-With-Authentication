@@ -61,13 +61,10 @@ const options5 = [
 const Page1 = () => {
   const [productData, setProductData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  const [totalProduct, setTotalProduct] = useState(0);
   const [offset, setOffset] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
   const pageLimit = 10;
   useEffect(() => {
 		getCategoryHierarchy();
-    getProductList(categoryID, [], [])
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [categoryID, offset]);
   const getCategoryHierarchy = async () => {
@@ -90,15 +87,11 @@ const Page1 = () => {
   	//let action = `${'http://localhost:8080/api/v1/products'}?${'&category=', categoryid}${'&count=', pageLimit}${'&lang=en'} ${'&page=', offset}`;
     let action = `${'http://localhost:8080/api/v1/products'}?${isCheckValueAndSetParams('&lang=', 'en')}${isCheckValueAndSetParams('&page=', offset)}${isCheckValueAndSetParams('&count=', pageLimit)}${isCheckValueAndSetParams('&category=', categoryid)}${isCheckValueAndSetParams('&optionValues=', size.join())}${isCheckValueAndSetParams('&manufacturer=', manufacture.join())}`;
 
-		console.log('getProductList', action)
+
     try {
 			let response = await WebService.get(action);
-			if (response) {
-				setCurrentPage(response.totalPages)
-				setProductData(response.products);
-				setTotalProduct(response.recordsTotal)
-			}
-      console.log('getProductList response', response)
+
+      console.log('getProductList', action, response)
 		} catch (error) {
 		}
 	}
