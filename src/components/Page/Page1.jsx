@@ -3,11 +3,12 @@ import {Tab, Tabs, Container, Row, Button} from 'react-bootstrap';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Select from "react-select";
+import { isCheckValueAndSetParams } from '../../util/helper';
 
 
 import WebService from '../../api/webService';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+let categoryID = 0
 let modifiedArr =[]
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -58,11 +59,17 @@ const options5 = [
 ];
 
 const Page1 = () => {
+  const [productData, setProductData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
+  const [totalProduct, setTotalProduct] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageLimit = 10;
   useEffect(() => {
 		getCategoryHierarchy();
+    getProductList(categoryID, [], [])
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [categoryID, offset]);
   const getCategoryHierarchy = async () => {
 		try {
 			let response = await WebService.get('http://localhost:8080/api/v1/category');
@@ -77,6 +84,21 @@ const Page1 = () => {
 			// console.log(error.messages)
 			// console.log(error)
 			// history.push('/not-found')
+		}
+	}
+  const getProductList = async (categoryid, size, manufacture) => {
+  	//let action = `${'http://localhost:8080/api/v1/products'}?${'&category=', categoryid}${'&count=', pageLimit}${'&lang=en'} ${'&page=', offset}`;
+    let action = `${'http://localhost:8080/api/v1/products'}?${isCheckValueAndSetParams('&lang=', 'en')}${isCheckValueAndSetParams('&page=', offset)}${isCheckValueAndSetParams('&count=', pageLimit)}${isCheckValueAndSetParams('&category=', categoryid)}${isCheckValueAndSetParams('&optionValues=', size.join())}${isCheckValueAndSetParams('&manufacturer=', manufacture.join())}`;
+
+		console.log('lakku', action)
+    try {
+			let response = await WebService.get(action);
+			if (response) {
+				setCurrentPage(response.totalPages)
+				setProductData(response.products);
+				setTotalProduct(response.recordsTotal)
+			}
+		} catch (error) {
 		}
 	}
   const [selectedOption, setSelectedOption] = useState({
@@ -100,23 +122,14 @@ const Page1 = () => {
     handleChnage(name, selectedOption);
   };
 
-  const handleCalculate = () => {
-    const { fromCurrency, toCurrency, amount } = selectedOption;
-
-    if (fromCurrency && toCurrency && amount) {
-      const conversionRate = toCurrency.value / fromCurrency.value;
-      const convertedAmount = amount * conversionRate;
-      setConvertedAmount(convertedAmount.toFixed(2));
-    } else {
-      setConvertedAmount("");
-    }
-  };
-
-
   return (
     <Container>
 
       <Row>
+      <div className="col col-lg-1">
+      {setProductData}
+        </div>
+
          <div className="col col-lg-1">
           <Select
               value={selectedOption.fromCurrency}
@@ -169,7 +182,8 @@ const Page1 = () => {
           />
         </div>
         <div className="col col-lg-1">
-          <Button variant="primary">조회</Button>{' '}
+          <Button variant="primary">조회</Button>
+          {console.log('select lakku', selectedOption.fromCurrency)}
         </div>
       </Row>
       <Row>
