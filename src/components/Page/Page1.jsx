@@ -90,7 +90,7 @@ const Page1 = () => {
   	//let action = `${'http://localhost:8080/api/v1/products'}?${'&category=', categoryid}${'&count=', pageLimit}${'&lang=en'} ${'&page=', offset}`;
     let action = `${'http://localhost:8080/api/v1/products'}?${isCheckValueAndSetParams('&lang=', 'en')}${isCheckValueAndSetParams('&page=', offset)}${isCheckValueAndSetParams('&count=', pageLimit)}${isCheckValueAndSetParams('&category=', categoryid)}${isCheckValueAndSetParams('&optionValues=', size.join())}${isCheckValueAndSetParams('&manufacturer=', manufacture.join())}`;
 
-		console.log('lakku', action)
+		console.log('getProductList', action)
     try {
 			let response = await WebService.get(action);
 			if (response) {
@@ -98,6 +98,7 @@ const Page1 = () => {
 				setProductData(response.products);
 				setTotalProduct(response.recordsTotal)
 			}
+      console.log('getProductList response', response)
 		} catch (error) {
 		}
 	}
@@ -122,6 +123,14 @@ const Page1 = () => {
     handleChnage(name, selectedOption);
   };
 
+  const onclick_test = (temp) =>{
+    try {
+			let clickvalue = temp.value;
+      console.log('onclick test', clickvalue);
+      getProductList(clickvalue, [], []);
+		} catch (error) {
+		}
+  };
   return (
     <Container>
 
@@ -181,9 +190,8 @@ const Page1 = () => {
               onChange={handleAmountChange}
           />
         </div>
-        <div className="col col-lg-1">
-          <Button variant="primary">조회</Button>
-          {console.log('select lakku', selectedOption.fromCurrency)}
+        <div className="col1 col-lg-1">
+          <Button variant="primary" onClick={onclick_test(selectedOption.fromCurrency)}>조회</Button>
         </div>
       </Row>
       <Row>
