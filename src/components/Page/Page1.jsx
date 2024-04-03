@@ -1,20 +1,45 @@
 import React , { useState ,useEffect}from 'react'
-import {Tab, Tabs, Container, Row, Col, Button} from 'react-bootstrap';
+import {Tab, Tabs, Container, Row, Button} from 'react-bootstrap';
+import { StyledEngineProvider } from '@mui/material/styles';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Select from "react-select";
+
+
 import WebService from '../../api/webService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 let modifiedArr =[]
-
-
-
-
-const options = [
-  { value: 1, label: "1차카타고리 1" },
-  { value: 0.8, label: "1차카타고리 2" },
-  { value: 0.55, label: "1차카타고리 3" },
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 90,
+  },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 160,
+    valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+  },
 ];
 
+const rows = [
+  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+];
 
 const options2 = [
   { value: 1, label: '2차카타고리 12' },
@@ -32,28 +57,8 @@ const options5 = [
   { value: 0.55, label: "검색대상 3" },
 ];
 
-const changeing = [
-  { value: 80, label: "Indian Rupee" },
-  { value: 50, label: "Nepal" },
-];
-
 const Page1 = () => {
   const [categoryData, setCategoryData] = useState([]);
-  const ProductDescriptionInfo = async () => {
-
-    try {
-      let response = await WebService.get('http://localhost:8080/api/v1/category');
-
-      modifiedArr = response.categories.map(function(element){
-        return { value: element.id , label: element.code };
-      });
-    
-      return(modifiedArr);
-      
-      } catch (error) {
-      console.log(error);
-    }
-  }
   useEffect(() => {
 		getCategoryHierarchy();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,8 +79,6 @@ const Page1 = () => {
 			// history.push('/not-found')
 		}
 	}
-
-
   const [selectedOption, setSelectedOption] = useState({
     fromCurrency: null,
     toCurrency: null,
@@ -116,7 +119,6 @@ const Page1 = () => {
       <Row>
          <div className="col col-lg-1">
           <Select
-
               value={selectedOption.fromCurrency}
               placeholder={"1차카타고리"}
               onChange={(selectedOption) =>
@@ -148,9 +150,8 @@ const Page1 = () => {
               isClearable
           />
         </div>
-        <div class="col col-lg-1">
+        <div className="col col-lg-1">
           <Select
-              className="categoty004"
               value={selectedOption.fromCurrency}
               placeholder={"검색대상"}
               onChange={(selectedOption) =>
@@ -160,24 +161,22 @@ const Page1 = () => {
               isClearable
           />
         </div>
-        <div class="col col-lg-1">
+        <div className="col col-lg-1">
           <input
               type="text"
-              className="categoty005"
               value={selectedOption.amount}
               onChange={handleAmountChange}
           />
         </div>
-        <div class="col col-lg-1">
+        <div className="col col-lg-1">
           <Button variant="primary">조회</Button>{' '}
         </div>
       </Row>
       <Row>
-        <div class="col col-lg-4">
+        <div className="col col-lg-4">
           <Tabs
             defaultActiveKey="profile"
             id="fill-tab-example"
-            className="mb-categoty006"
             fill
           >
             <Tab eventKey="ALL" title="전체">
@@ -198,6 +197,19 @@ const Page1 = () => {
           </Tabs>
         </div>
       </Row>
+      <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+      />
+    </div>
     </Container>
   );
 }

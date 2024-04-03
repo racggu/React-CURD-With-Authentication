@@ -24,6 +24,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
+              <Link to="/table1" className="hover:text-white">
+                Table1
+              </Link>
+            </li>
+            <li>
               <Link to="/" className="hover:text-white">
                 Home
               </Link>

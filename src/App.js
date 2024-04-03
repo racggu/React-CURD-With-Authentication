@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar/Navbar";
 import AgeCalulation from "./components/Age/AgeCalulation";
 import Home from "./components/Home/Home";
 import Page1 from "./components/Page/Page1";
+import Table1 from "./components/Table/Table1";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import CurrencyConverter from "./components/CurrencyConverter/CurrencyConverter";
 import Users from "./components/Users/Users";
@@ -33,6 +34,7 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path="/page1" element={<Page1 />} />
+            <Route path="/table1" element={<Table1 />} />
             <Route path="/" element={<Home />} />
             <Route path="/agecalculater" element={<AgeCalulation />} />
             <Route path="/currency" element={<CurrencyConverter />} />
