@@ -69,7 +69,7 @@ const Page1 = () => {
 	}, [categoryID, offset]);
   const getCategoryHierarchy = async () => {
 		try {
-			let response = await WebService.get('http://localhost:8080/api/v1/category');
+			let response = await WebService.get('http://localhost:8080/api/v1/products?&lang=en&page=0&count=10&category=51 ');
 			if ( response ) {
 
         modifiedArr = response.categories.map(function(element){

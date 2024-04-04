@@ -7,6 +7,7 @@ import AgeCalulation from "./components/Age/AgeCalulation";
 import Home from "./components/Home/Home";
 import Page1 from "./components/Page/Page1";
 import Table1 from "./components/Table/Table1";
+import BookList from "./components/BookList/BookList";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
 import CurrencyConverter from "./components/CurrencyConverter/CurrencyConverter";
 import Users from "./components/Users/Users";
@@ -35,6 +36,7 @@ const App = () => {
           <Routes>
             <Route path="/page1" element={<Page1 />} />
             <Route path="/table1" element={<Table1 />} />
+            <Route path="/booklist" element={<BookList />} />
             <Route path="/" element={<Home />} />
             <Route path="/agecalculater" element={<AgeCalulation />} />
             <Route path="/currency" element={<CurrencyConverter />} />

@@ -23,11 +23,18 @@ const Navbar = () => {
                 Page1
               </Link>
             </li>
+
             <li>
               <Link to="/table1" className="hover:text-white">
                 Table1
               </Link>
             </li>
+            <li>
+              <Link to="/booklist" className="hover:text-white">
+                BookList
+              </Link>
+            </li>
+
             <li>
               <Link to="/" className="hover:text-white">
                 Home

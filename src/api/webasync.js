@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 
-export default class WebService  {
+export default class WebService {
 	static async post(action, params) {
 		let response = await axios.post(action, params)
 		return response.data
