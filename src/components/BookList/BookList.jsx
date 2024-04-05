@@ -75,24 +75,6 @@ const CrudTable = () => {
 
   return (
     <div>
-      <h2>CRUD Table</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleInputChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleInputChange}
-        />
-        <button type="submit">{editingId === null ? 'Create' : 'Update'}</button>
-      </form>
       <table>
         <thead>
           <tr>
