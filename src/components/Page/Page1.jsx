@@ -4,7 +4,7 @@ import {Tab, Tabs, Container, Row, Col, Button} from 'react-bootstrap';
 import Select from "react-select";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import WebService from '../../api/webService';
-import DTcolumns from './tablecolumns';
+
 
 let modifiedArr =[]
 
@@ -32,7 +32,6 @@ const options6 = [
   { value: 50, label: "50개씩 보기" },
   { value: 100, label: "100개씩 보기" },
 ];
-
 
 const MARKETING_CATEGORY_INIT = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -131,12 +130,27 @@ const MARKETING_CATEGORY_INIT = () => {
     } catch (error) {}
   };
 
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'selid', headerName: '판매자 id', width: 130 },
+    { field: 'image', headerName: '이미지', width: 130 ,  renderCell: (params) => <img src={params.value} width = "40"/> },
+    { field: 'name', headerName: '상품명', width: 130 },
+    { field: 'sortOrder', headerName: 'MOQ', width: 130 },
+    { field: 'price', headerName: '가격', width: 130 },
+    { field: 'qny', headerName: '판매량(누적)', width: 130 },
+    { field: 'dateAvailable', headerName: '게시일', width: 130 },
+    { field: 'creationDate', headerName: '수정일', width: 130 }, 
+    { field: '승인', headerName: '승인', width: 130 ,  renderCell: (params) => <Button onClick={() => onclick_test(selectedOption.fromCurrency)}>선택 승인</Button>},
+  ];
+
+
+
   return (
   <Container>
     <Row>
       <ol>
         <li>
-          <span class="selectDefaultPack">
+          <span className="selectDefaultPack">
             <Select id = "schCate1"
               value={selectedOption.fromCurrency}
               placeholder={"1차카타고리"}
@@ -229,7 +243,7 @@ const MARKETING_CATEGORY_INIT = () => {
     <div className="DataGrid">
       <DataGrid
         rows={data}
-        columns={DTcolumns}
+        columns={columns}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },

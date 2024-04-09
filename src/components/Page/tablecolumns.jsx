@@ -8,7 +8,7 @@ const columns: GridColDef[] = [
     { field: 'qny', headerName: '판매량(누적)', width: 130 },
     { field: 'dateAvailable', headerName: '게시일', width: 130 },
     { field: 'creationDate', headerName: '수정일', width: 130 }, 
-    { field: '승인', headerName: '승인', width: 130 },
+    { field: '승인', headerName: '승인', width: 130 ,  renderCell: (params) => <Button onClick={() => onclick_test(selectedOption.fromCurrency)}>선택 승인</Button>},
   ];
 
   export default columns
