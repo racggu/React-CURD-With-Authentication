@@ -11,15 +11,16 @@ let modifiedArr =[]
 function Table1(props) {
 	const [data, setData] = useState([]);
 	const [selectedIds, setSelectedIds] = useState([]);
-	const get_ADDRESS_SEARCH =  () => {
+	const [searchTerm, setSearchTerm] = useState('');
+	const get_ADDRESS_SEARCH =  (keyword) => {
 
 		const retrieveDetailURL = '';
 		const requestOptions = {
 			method: "GET",
 			params: {
 				'currentPage': 1,
-				'countPerPage': 10,
-				'keyword' : "예강",
+				'countPerPage': 1000,
+				'keyword' : keyword,
 				'resultType': "json"
 			}
 		}
@@ -38,10 +39,18 @@ function Table1(props) {
 		  }
 		);
 	}
+
+	const customCellRenderer = (params) => (
+		<div  style={{ whiteSpace: 'pre-wrap', lineHeight: '2' }}>
+		  <table>
+			  <tr>{params.row.roadAddr}</tr>
+			  <tr>[지번] {params.row.jibunAddr}</tr>
+		  </table>
+		</div>
+	);
+
 	const columns: GridColDef[] = [
-		{ field: 'id', headerName: 'No', width: 70 },
-		{ field: 'roadAddr', headerName: '도로명주소', width: 130, renderCell: (params) => <img src={params.value} width = "40"/> },
-		{ field: 'jibunAddr', headerName: '지번', width: 130  },
+		{ field: 'roadAddr', headerName: '도로명주소', width: 500, renderCell: customCellRenderer },
 		{ field: 'zipNo', headerName: ' 우편번호', width: 130 },
 	  ];
 	const generateId = () => {
@@ -52,11 +61,27 @@ function Table1(props) {
 		return row.id || generateId(); // If row.id doesn't exist, generate a new ID
 	};
 
+	const handleChange = (event) => {
+	  setSearchTerm(event.target.value);
+	};
+  
+	const handleSubmit = (event) => {
+	  event.preventDefault();
+	  get_ADDRESS_SEARCH(searchTerm)
+	};
+  
 	return (
 	<Container>	
-	<div className="Button">
-	 <Button onClick={() => get_ADDRESS_SEARCH()}>조회</Button>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleChange}
+        placeholder="Search..."
+      />
+      <button type="submit">Search</button>
+    </form>
+
     <div className="DataGrid">
       <DataGrid
         rows={data}
@@ -68,7 +93,6 @@ function Table1(props) {
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
         onRowSelectionModelChange={(newSelectedIds) => {
           setSelectedIds(newSelectedIds);
         }}
