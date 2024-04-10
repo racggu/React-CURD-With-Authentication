@@ -8,10 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 let modifiedArr =[]
 
-function Table1(props) {
+const Table1 = (setModalOpen) => {
 	const [data, setData] = useState([]);
-	const [selectedIds, setSelectedIds] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');
+
 	const get_ADDRESS_SEARCH =  (keyword) => {
 
 		const retrieveDetailURL = '';
@@ -51,7 +51,7 @@ function Table1(props) {
 
 	const columns: GridColDef[] = [
 		{ field: 'roadAddr', headerName: '도로명주소', width: 500, renderCell: customCellRenderer },
-		{ field: 'zipNo', headerName: ' 우편번호', width: 130 },
+		{ field: 'zipNo', headerName: ' 우편번호', width: 80 },
 	  ];
 	const generateId = () => {
 		return uuidv4();
@@ -69,7 +69,13 @@ function Table1(props) {
 	  event.preventDefault();
 	  get_ADDRESS_SEARCH(searchTerm)
 	};
-  
+
+    const handleCloseModal = () => {
+		console.log('close modal', 'test');
+		setModalOpen = false;
+		console.log('close modal', setModalOpen);
+    };
+
 	return (
 	<Container>	
     <form onSubmit={handleSubmit}>
@@ -82,7 +88,7 @@ function Table1(props) {
       <button type="submit">Search</button>
     </form>
 
-    <div className="DataGrid">
+    <div className="DataGrid" style={{ width: 590}}>
       <DataGrid
         rows={data}
 		getRowId={getRowId}
@@ -93,11 +99,7 @@ function Table1(props) {
           },
         }}
         pageSizeOptions={[5, 10]}
-        onRowSelectionModelChange={(newSelectedIds) => {
-          setSelectedIds(newSelectedIds);
-        }}
-        selectedIds={selectedIds}
-		
+		onCellDoubleClick={(clickrow) => handleCloseModal()} //console.log(clickrow)}
       />
     </div>
 	</Container>
