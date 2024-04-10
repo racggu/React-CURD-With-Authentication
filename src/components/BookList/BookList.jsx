@@ -60,16 +60,14 @@ const Modal = ({ isOpen, onClose, onSave }) => {
 		return row.id || generateId(); // If row.id doesn't exist, generate a new ID
 	};
 
-
    //part3. outher
-   
 	const handleSubmit = (event) => {
 	  event.preventDefault();
 	  get_ADDRESS_SEARCH(inputValue)
 	};
 
   const handleClose = (clickrow) => {
-    console.log("lakku", clickrow)
+    onSave(clickrow.formattedValue + clickrow.row.zipNo + clickrow.row.jibunAddr );
     onClose(); // Close the modal without saving
   };
 
@@ -88,12 +86,6 @@ const Modal = ({ isOpen, onClose, onSave }) => {
 
   return (
     <div>
-      <div className="modal-overlay">
-        <div className="modal">
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleClose}>Close</button>
-        </div>
-      </div>
       <div className="modal-search">
           <form onSubmit={handleSubmit}>
           <input
@@ -123,6 +115,17 @@ const Modal = ({ isOpen, onClose, onSave }) => {
   );
 };
 
+const TextInput = ({ value, onChange }) => {
+  return (
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="Enter text..."
+    />
+  );
+};
+
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalValue, setModalValue] = useState('');
@@ -141,6 +144,7 @@ const App = () => {
 
   return (
     <div>
+      <TextInput value={modalValue}  />
       <div className="text"><input type="text"/></div>
       <button onClick={openModal}>조회</button>
       <p>Modal Value: {modalValue}  ============================</p>
