@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import * as Net from '../../api/other';
-import {Button, Container} from 'react-bootstrap';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,8 +8,8 @@ let modifiedArr =[]
 const Modal = ({ isOpen, onClose, onSave }) => {
   const [inputValue, setInputValue] = useState('');
   const [data, setData] = useState([]);
-	const [searchTerm, setSearchTerm] = useState('');
 
+  //part1. API
 	const get_ADDRESS_SEARCH =  (keyword) => {
 
 		const retrieveDetailURL = '';
@@ -39,6 +38,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
 		);
 	}
 
+ //part2. DataGrid
 	const customCellRenderer = (params) => (
 		<div  style={{ whiteSpace: 'pre-wrap', lineHeight: '2' }}>
 		  <table>
@@ -61,12 +61,15 @@ const Modal = ({ isOpen, onClose, onSave }) => {
 	};
 
 
+   //part3. outher
+   
 	const handleSubmit = (event) => {
 	  event.preventDefault();
-	  get_ADDRESS_SEARCH(searchTerm)
+	  get_ADDRESS_SEARCH(inputValue)
 	};
 
-  const handleClose = () => {
+  const handleClose = (clickrow) => {
+    console.log("lakku", clickrow)
     onClose(); // Close the modal without saving
   };
 
@@ -87,7 +90,6 @@ const Modal = ({ isOpen, onClose, onSave }) => {
     <div>
       <div className="modal-overlay">
         <div className="modal">
-          <input type="text" value={searchTerm} onChange={handleChange} />
           <button onClick={handleSave}>Save</button>
           <button onClick={handleClose}>Close</button>
         </div>
@@ -96,7 +98,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
           <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={searchTerm}
+            value={inputValue}
             onChange={handleChange}
             placeholder="Search..."
           />
@@ -114,7 +116,7 @@ const Modal = ({ isOpen, onClose, onSave }) => {
           },
         }}
         pageSizeOptions={[5, 10]}
-		onCellDoubleClick={(clickrow) => handleClose()} //console.log(clickrow)}
+		onCellDoubleClick={(clickrow) => handleClose(clickrow)} //console.log(clickrow)}
       />
     </div>
     </div>
@@ -141,7 +143,7 @@ const App = () => {
     <div>
       <div className="text"><input type="text"/></div>
       <button onClick={openModal}>조회</button>
-      <p>Modal Value: {modalValue}</p>
+      <p>Modal Value: {modalValue}  ============================</p>
       <Modal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
     </div>
   );
