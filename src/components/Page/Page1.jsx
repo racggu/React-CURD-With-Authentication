@@ -1,8 +1,8 @@
 import { LOCAL_shopizer } from '../../config';
-import React , { useState ,useEffect}from 'react'
+import React , { useState ,useEffect} from 'react'
 import {Tab, Tabs, Container, Row, Col, Button} from 'react-bootstrap';
 import Select from "react-select";
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import WebService from '../../api/webService';
 
 
@@ -32,6 +32,15 @@ const options6 = [
   { value: 50, label: "50개씩 보기" },
   { value: 100, label: "100개씩 보기" },
 ];
+
+const DownloadExcelButton = ({ apiRef }) => {
+  const handleDownloadExcel = () => {
+    apiRef.current.exportDataAsExcel();
+  };
+
+  return <button onClick={handleDownloadExcel}>Download Excel</button>;
+};
+
 
 const MARKETING_CATEGORY_INIT = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -130,7 +139,7 @@ const MARKETING_CATEGORY_INIT = () => {
     } catch (error) {}
   };
 
-  const columns: GridColDef[] = [
+  const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'selid', headerName: '판매자 id', width: 130 },
     { field: 'image', headerName: '이미지', width: 130 ,  renderCell: (params) => <img src={params.value} width = "40"/> },
@@ -143,8 +152,6 @@ const MARKETING_CATEGORY_INIT = () => {
     { field: '승인', headerName: '승인', width: 130 ,  renderCell: (params) => <Button onClick={() => onclick_test(selectedOption.fromCurrency)}>선택 승인</Button>},
   ];
 
-
-
   return (
   <Container>
     <Row>
@@ -154,7 +161,7 @@ const MARKETING_CATEGORY_INIT = () => {
             <Select id = "schCate1"
               value={selectedOption.fromCurrency}
               placeholder={"1차카타고리"}
-              onClick ={getCategoryHierarchy()}
+              onClick ={() => getCategoryHierarchy()}
               onChange={(selectedOption) =>
                 handleCurrencyChange("fromCurrency", selectedOption)
               }
@@ -255,8 +262,19 @@ const MARKETING_CATEGORY_INIT = () => {
           setSelectedIds(newSelectedIds);
         }}
         selectedIds={selectedIds}
+        components={{
+          Toolbar: DownloadExcelButton,
+        }}
+        excelExport
+
       />
     </div>
+    <button id="openModal">Open the modal</button>
+
+<dialog id="modal">
+  <p>Modal content of your choice. Click the below button or press the escape key to close this.</p>
+  <button id="closeModal">Close this modal</button>
+</dialog>
   </Container>
   );
 }

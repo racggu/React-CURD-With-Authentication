@@ -6,4 +6,4 @@ export const GALLERY_BBS_ID = "BBSMSTR_BBBBBBBBBBBB"; // 갤러리 게시판 아
 
 //export const ADDRESS_SEARCH_URL = "http://localhost:5000/test"
 export const ADDRESS_SEARCH_URL = "http://business.juso.go.kr/addrlink/addrLinkApi.do"
-export const ADDRESS_SEARCH_KEY = "devU01TX0FVVEgyMDI0MDQwODE2NTg1OTExNDY3MjI="  //개발용 임시 키
+export const ADDRESS_SEARCH_KEY = "U01TX0FVVEgyMDI0MDQxMTEwMzQ0NjExNDY4MDc="  //개발용 임시 키

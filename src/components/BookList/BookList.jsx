@@ -3,7 +3,6 @@ import * as Net from '../../api/other';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 
-let modifiedArr =[]
 
 const Modal = ({ isOpen, onClose, onSave }) => {
   const [inputValue, setInputValue] = useState('');
@@ -27,12 +26,6 @@ const Modal = ({ isOpen, onClose, onSave }) => {
 		  requestOptions,
 		  function (resp) {
 			 console.log(resp.results.juso);
-
-			 modifiedArr = resp.results.juso.map(function(element){
-				return { id: element.any , roadAddr: element.roadAddr , jibunAddr: element.jibunAddr, zipNo :element.zipNo};
-			  });
-			  console.log('lakku', modifiedArr)
-
 			 setData(resp.results.juso)
 		  }
 		);
@@ -41,14 +34,12 @@ const Modal = ({ isOpen, onClose, onSave }) => {
  //part2. DataGrid
 	const customCellRenderer = (params) => (
 		<div  style={{ whiteSpace: 'pre-wrap', lineHeight: '2' }}>
-		  <table>
-			  <tr>{params.row.roadAddr}</tr>
-			  <tr>[지번] {params.row.jibunAddr}</tr>
-		  </table>
+			  <li>{params.row.roadAddr}</li>
+			  <li>[지번] {params.row.jibunAddr}</li>
 		</div>
 	);
 
-	const columns: GridColDef[] = [
+	const columns = [
 		{ field: 'roadAddr', headerName: '도로명주소', width: 500, renderCell: customCellRenderer },
 		{ field: 'zipNo', headerName: ' 우편번호', width: 80 },
 	  ];
@@ -69,11 +60,6 @@ const Modal = ({ isOpen, onClose, onSave }) => {
   const handleClose = (clickrow) => {
     onSave(clickrow.formattedValue + clickrow.row.zipNo + clickrow.row.jibunAddr );
     onClose(); // Close the modal without saving
-  };
-
-  const handleSave = () => {
-    onSave(inputValue); // Save the input value and then close the modal
-    onClose(); // Close the modal after saving
   };
 
   const handleChange = (event) => {

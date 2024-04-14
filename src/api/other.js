@@ -10,8 +10,6 @@ export function requestFetch(url, requestOptions, handler, errorHandler) {
     requestOptions.params.confmKey =ADDRESS_SEARCH_KEY;
     console.log("requestFetch [requestOption] : ", requestOptions);
 
-
-
     //CORS ISSUE 로 인한 조치 - origin 및 credentials 추가 
     // origin 추가
     if (!requestOptions['origin']) {

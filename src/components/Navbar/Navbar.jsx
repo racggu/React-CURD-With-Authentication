@@ -18,6 +18,11 @@ const Navbar = () => {
         <label className="font-Pacifico text-2xl text-">Calculation</label>
         <nav className="hidden md:flex">
           <ul className="flex gap-8 text-xl text-black font-bold font-Pacifico">
+          <li>
+              <Link to="/mystore" className="hover:text-white">
+                MyStore
+              </Link>
+            </li>
             <li>
               <Link to="/page1" className="hover:text-white">
                 Page1
@@ -25,7 +30,7 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/table1" className="hover:text-white">
+              <Link to="/table" className="hover:text-white">
                 Table1
               </Link>
             </li>
