@@ -1,4 +1,5 @@
 import { useState } from "react";
+import apilogaxios from "../../api/apilogaxios";
 
 const AgeCalulation = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -10,6 +11,7 @@ const AgeCalulation = () => {
     let calculatedAge = yearDiff;
     const monthDiff = currentDate.getMonth() - dob.getMonth();
     const dayDiff = currentDate.getDate() - dob.getDate();
+
 
     if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
       calculatedAge--;
@@ -23,6 +25,14 @@ const AgeCalulation = () => {
   const handleDateChange = (event) => {
     setDateOfBirth(event.target.value);
   };
+
+  const handlePostRequest = () => {
+
+   apilogaxios.post({  username: "devstone",  password: "123452342"  });
+
+
+  };
+
 
   return (
     <>
@@ -50,6 +60,9 @@ const AgeCalulation = () => {
           </h1>
         </div>
       </div>
+      <div>
+      <button onClick={apilogaxios.post({  username: "devstone",  password: "123452342"  })}>POST 요청 보내기</button>
+    </div>
     </>
   );
 };
