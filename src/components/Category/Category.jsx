@@ -8,8 +8,7 @@ const Category = ({onClose, onSave}) => {
     const [secondCategory, setSecondCategory] = useState([]);
     const [thirdCategory, setThirdCategory] = useState([]);
     const [inputText, setInputText] = useState('1');
-    const [data, setData] = useState([]);
-    const [outdata, outsetData] = useState([]);
+    const [GridData, setGridData] = useState([]);
     const [searchResult, setSearchResult] = useState('');
 
 	useEffect(() => {
@@ -28,7 +27,6 @@ const Category = ({onClose, onSave}) => {
 
 			setCategories(data.categories);
 			setFirstCategory(modifiedArr);
-            fcsetdata(data.categories);
 
 			})
 			.catch(error => {
@@ -63,24 +61,24 @@ const Category = ({onClose, onSave}) => {
       setThirdCategory(e.target.value);
     };
 
-    function fcsetdata(trans){
-        console.log('fcdata', trans, trans[0].code)
-        let outval = []
+    function handleSearchClick(){
+        console.log('fcdata', categories, categories[0].code)
+        let tempGridData = []
 
-        for (let id in trans) {
-            console.log('fcdata i', id, trans[id].code, inputText)
-            let firstname =  trans[id].code
-            if (trans[id].code.indexOf(inputText) !== -1) {
-                outval.push({'id':trans[id].id, 'first': trans[id].code, 'second':'', 'third': ''})
+        for (let id in categories) {
+            console.log('fcdata i', id, categories[id].code, inputText)
+            let firstname =  categories[id].code
+            if (categories[id].code.indexOf(inputText) !== -1) {
+                tempGridData.push({'id':categories[id].id, 'first': categories[id].code, 'second':'', 'third': ''})
                 
             }
-            if (trans[id].children.length){
-                let obj1 = trans[id].children;
+            if (categories[id].children.length){
+                let obj1 = categories[id].children;
                 for (let id in obj1) {
                     let secondname =  obj1[id].code
                     console.log('obj1', obj1)
                     if (obj1[id].code.indexOf(inputText) !== -1) {
-                        outval.push({'id':obj1[id].id, 'first': firstname, 'second':secondname, 'third': ''})
+                        tempGridData.push({'id':obj1[id].id, 'first': firstname, 'second':secondname, 'third': ''})
                     }
                     if (obj1[id].children.length){
                         let obj2 = obj1[id].children;
@@ -90,7 +88,7 @@ const Category = ({onClose, onSave}) => {
                                 console.log('id', id);
                             }
                             if (obj2[id].code.indexOf(inputText) !== -1) {
-                                outval.push({'id':obj2[id].id, 'first': firstname, 'second':secondname, 'third': thirdname})
+                                tempGridData.push({'id':obj2[id].id, 'first': firstname, 'second':secondname, 'third': thirdname})
                             }
                         }
                     }
@@ -99,7 +97,8 @@ const Category = ({onClose, onSave}) => {
             } 
             
         }
-        console.log('outva', outval)
+        setGridData(tempGridData)
+        console.log('outva', GridData, tempGridData)
 
     }
 
@@ -107,45 +106,8 @@ const Category = ({onClose, onSave}) => {
         setInputText(e.target.value);
     };
 
-    const handleSearchClick = () => {
-        // 입력된 내용을 여기에서 찾는 작업을 수행합니다.
-        // 예를 들어, 검색 결과를 setSearchResult로 설정할 수 있습니다.
-        console.log(inputText)
-        let result
-        for(let i = 0; i < categories.length; i++){
-            console.log(categories[i])
-            if(categories[i].code === inputText){
-              result = categories[i].id
-              setFirstCategory([result]);
-              return result
-            }
-            if(categories[i].children.length){
-                let jmax = categories[i].children.length
-                for(let j = 0; j < jmax; j++){
-                    if(categories[i].children[j].code === inputText){
-                      result = categories[i].children[j].id
-                      setFirstCategory([categories[i].id]);
-                      setSecondCategory([result]);
-                      return result
-                    }
-                    if(categories[i].children[j].children.length){
-                        let kmax = categories[i].children[j].children.length
-                        for(let k = 0; k < kmax; k++){
-                            if(categories[i].children[j].children[k].code === inputText){
-                              result = categories[i].children[j].children[k].id
-                              setFirstCategory([categories[i].id]);
-                              setSecondCategory([categories[i].children[j].id]);
-                              setThirdCategory([result]);
-                              return result
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        console.log(result)
-    };
 	const columns = [
+        { field: 'id', headerName: 'id', width: 100},
 		{ field: 'first', headerName: '1차카타고리', width: 100},
 		{ field: 'second', headerName: '2차카타고리', width: 100} ,
         { field: 'third', headerName: '3차카타고리', width: 100}
@@ -159,9 +121,7 @@ const Category = ({onClose, onSave}) => {
 	};
 
 	const handleClose = (clickrow) => {
-		onSave( 'road: ' + clickrow.formattedValue +
-			' /zipNo: ' + clickrow.row.zipNo +
-			' /jibun: ' + clickrow.row.jibunAddr );
+		onSave( 'id: ' + clickrow.id  );
 		onClose(); // Close the modal without saving
 	};
 
@@ -175,7 +135,7 @@ const Category = ({onClose, onSave}) => {
                 </div>
                 <div className="modal-search-result DataGrid" style={{ width: 590}}>
 				<DataGrid
-					rows={data}
+					rows={GridData}
 					getRowId={getRowId}
 					columns={columns}
 					initialState={{ pagination: {  paginationModel: { page: 0, pageSize: 5 }, }, }}
