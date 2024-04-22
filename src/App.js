@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { userDetails } from "./components/consonets/userDetails";
 import Navbar from "./components/Navbar/Navbar";
 import AgeCalulation from "./components/Age/AgeCalulation";
+import Category from "./components/Category/Category";
 import Home from "./components/Home/Home";
 import Page1 from "./components/Page/Page1";
 import Table from "./components/Table/Table";
@@ -35,6 +36,7 @@ const App = () => {
         <BrowserRouter>
           <Navbar />
           <Routes>
+            <Route path="/category" element={<Category />} />
             <Route path="/mystore" element={<MyStore />} />
             <Route path="/page1" element={<Page1 />} />
             <Route path="/table" element={<Table />} />

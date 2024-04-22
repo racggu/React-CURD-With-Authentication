@@ -18,7 +18,12 @@ const Navbar = () => {
         <label className="font-Pacifico text-2xl text-">Calculation</label>
         <nav className="hidden md:flex">
           <ul className="flex gap-8 text-xl text-black font-bold font-Pacifico">
-          <li>
+            <li>
+              <Link to="/category" className="hover:text-white">
+                Category
+              </Link>
+            </li>
+           <li>
               <Link to="/mystore" className="hover:text-white">
                 MyStore
               </Link>
