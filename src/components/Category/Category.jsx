@@ -1,19 +1,70 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { v4 as uuidv4 } from 'uuid';
 
-const Category = ({onClose, onSave}) => {
+
+function GridModal({ isOpen, onClose, onSave, initialValue  }) {
+
+    const handleSave = (clickrow) => {
+      onClose();
+      onSave( 'id: ' + clickrow.id  );
+      onClose(); // Close the modal without saving
+    };
+
+    const columns = [
+        { field: 'id', headerName: 'id', width: 100},
+		{ field: 'first', headerName: '1차카타고리', width: 100},
+		{ field: 'second', headerName: '2차카타고리', width: 100} ,
+        { field: 'third', headerName: '3차카타고리', width: 100}
+	];
+
+    return (
+      <>
+        {isOpen &&
+            <div className="modal"> 
+                <DataGrid
+                    rows={initialValue}
+                    getRowId={initialValue.id}
+                    columns={columns}
+                    initialState={{ pagination: {  paginationModel: { page: 0, pageSize: 5 }, }, }}
+                    pageSizeOptions={[5, 10]}
+                    onCellDoubleClick={(clickrow) => handleSave(clickrow)} 
+                />
+            </div>
+        }
+      </>
+    );
+  }
+
+
+const Category = () => {
     const [categories, setCategories] = useState([]);
     const [firstCategory, setFirstCategory] = useState([]);
     const [secondCategory, setSecondCategory] = useState([]);
     const [thirdCategory, setThirdCategory] = useState([]);
     const [inputText, setInputText] = useState('1');
     const [GridData, setGridData] = useState([]);
-    const [searchResult, setSearchResult] = useState('');
+    const dialogRef = useRef(null);
+    const [modalValue, setModalValue] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 	useEffect(() => {
 		fetchData();
 	}, []); 
+
+	const openDialog = () => {
+        handleSearchClick()
+
+		dialogRef.current.showModal();
+		setIsModalOpen(true);
+	  };
+	
+    const closeDialog = () => {
+    dialogRef.current.close();
+    setIsModalOpen(false);
+    };
+    const handleSave = (value) => {
+    setModalValue(value); // Save the value received from the modal
+    };
 
     const fetchData = async () => {
       try {
@@ -37,7 +88,6 @@ const Category = ({onClose, onSave}) => {
       }
     };
   
-
     const handleCategoryini = () => {
       setFirstCategory([]);
       setSecondCategory([]);
@@ -62,11 +112,9 @@ const Category = ({onClose, onSave}) => {
     };
 
     function handleSearchClick(){
-        console.log('fcdata', categories, categories[0].code)
         let tempGridData = []
 
         for (let id in categories) {
-            console.log('fcdata i', id, categories[id].code, inputText)
             let firstname =  categories[id].code
             if (categories[id].code.indexOf(inputText) !== -1) {
                 tempGridData.push({'id':categories[id].id, 'first': categories[id].code, 'second':'', 'third': ''})
@@ -76,7 +124,6 @@ const Category = ({onClose, onSave}) => {
                 let obj1 = categories[id].children;
                 for (let id in obj1) {
                     let secondname =  obj1[id].code
-                    console.log('obj1', obj1)
                     if (obj1[id].code.indexOf(inputText) !== -1) {
                         tempGridData.push({'id':obj1[id].id, 'first': firstname, 'second':secondname, 'third': ''})
                     }
@@ -84,9 +131,6 @@ const Category = ({onClose, onSave}) => {
                         let obj2 = obj1[id].children;
                         for (let id in obj2) {
                             let thirdname =  obj2[id].code
-                            if (obj2.hasOwnProperty(id)) {
-                                console.log('id', id);
-                            }
                             if (obj2[id].code.indexOf(inputText) !== -1) {
                                 tempGridData.push({'id':obj2[id].id, 'first': firstname, 'second':secondname, 'third': thirdname})
                             }
@@ -106,42 +150,24 @@ const Category = ({onClose, onSave}) => {
         setInputText(e.target.value);
     };
 
-	const columns = [
-        { field: 'id', headerName: 'id', width: 100},
-		{ field: 'first', headerName: '1차카타고리', width: 100},
-		{ field: 'second', headerName: '2차카타고리', width: 100} ,
-        { field: 'third', headerName: '3차카타고리', width: 100}
-	];
-
-    const generateId = () => {
-		return uuidv4();
-	};
-    const getRowId = (row) => {
-		return row.id || generateId(); // If row.id doesn't exist, generate a new ID
-	};
-
-	const handleClose = (clickrow) => {
-		onSave( 'id: ' + clickrow.id  );
-		onClose(); // Close the modal without saving
-	};
-
+	const closeModal = () => {
+        setIsModalOpen(false);
+        dialogRef.current.close();
+      };
 
 	return (
 		<div className="frmWr">
             <div className="a-sch01">
                 <div className="frm">
                     <input className="schKey" type="text" value={inputText} onChange={handleInputChange} />
-                    <button type="button" className="cp-bBtn" onClick={handleSearchClick}><span>검색</span></button>
+                    <button type="button" className="cp-bBtn" onClick={openDialog}><span>검색</span></button>
                 </div>
                 <div className="modal-search-result DataGrid" style={{ width: 590}}>
-				<DataGrid
-					rows={GridData}
-					getRowId={getRowId}
-					columns={columns}
-					initialState={{ pagination: {  paginationModel: { page: 0, pageSize: 5 }, }, }}
-					pageSizeOptions={[5, 10]}
-					onCellDoubleClick={(clickrow) => handleClose(clickrow)} //console.log(clickrow)}
-                    />
+                <dialog ref={dialogRef} style={{ border: '2px solid blue', borderRadius: '5px', padding: '10px', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+						<GridModal  isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} initialValue={GridData} />
+							<button className="cw-sBtn hasIco" onClick={closeDialog}>닫기</button>
+				</dialog>
+
                 </div>
                 <div className="frm">
                     <ul className="lv1">
@@ -186,8 +212,6 @@ const Category = ({onClose, onSave}) => {
                 <div className="btn">
                     <button type="button" className="cp-bBtn" onClick={() => handleCategoryini()} ><span>초기화</span></button>
                 </div>
-
-
 
                     {parseInt(firstCategory)}{parseInt(secondCategory)}{parseInt(thirdCategory)}
             </div>
