@@ -18,20 +18,18 @@ function GridModal({ isOpen, onClose, onSave, initialValue  }) {
 	];
 
     return (
-      <>
-        {isOpen &&
-            <div className="modal"> 
-                <DataGrid
+
+            <div className="DataGrid" >
+                {isOpen === true ?<DataGrid autoheight style={{ width: 410 }}
                     rows={initialValue}
                     getRowId={initialValue.id}
                     columns={columns}
                     initialState={{ pagination: {  paginationModel: { page: 0, pageSize: 5 }, }, }}
                     pageSizeOptions={[5, 10]}
                     onCellDoubleClick={(clickrow) => handleSave(clickrow)} 
-                />
+                /> : null}
             </div>
-        }
-      </>
+
     );
   }
 
@@ -66,7 +64,6 @@ const Category = () => {
     const handleSave = (value) => {
         for (let i = 0; i < GridData.length; i++) {
             if (GridData[i].id === value) {
-              console.log(GridData[i])
               setFirstCategory([GridData[i].firstid]);
               setSecondCategory([GridData[i].secondid]);
               setThirdCategory([GridData[i].thirdid]);
@@ -191,44 +188,30 @@ const Category = () => {
 
                 </div>
                 <div className="frm">
-                    <ul className="lv1">
-                        <li className="w100p">
-                            <div className="schCateWr">
-                                <ol>
-                                    <li>
-                                        <select value={firstCategory} onChange={handleFirstCategoryChange}>
-                                            <option value="">1차 카테고리 선택</option>
-                                            {categories.map(category => (
-                                            <option key={category.id} value={category.id}>{category.code}</option>
-                                            ))}
-                                        </select>
-                                    </li>
-                                    <li>
-                                        {firstCategory && (
-                                            <select value={secondCategory} onChange={handleSecondCategoryChange}>
-                                                <option value="">2차 카테고리 선택</option>
-                                                {/* 1차 카테고리에 따라 동적으로 옵션을 불러옴 */}
-                                                {categories.find(category => category.id === parseInt(firstCategory))?.children.map(subcategory => (
-                                                <option key={subcategory.id} value={subcategory.id}>{subcategory.code}</option>
-                                                ))}
-                                            </select>
-                                        )}
-                                    </li>
-                                    <li>
-                                        {secondCategory && (
-                                            <select value={thirdCategory} onChange={handleThirdCategoryChange}>
-                                                <option value="">3차 카테고리 선택</option>
-                                                {/* 2차 카테고리에 따라 동적으로 옵션을 불러옴 */}
-                                                {categories.find(category => category.id === parseInt(firstCategory))?.children.find(subcategory => subcategory.id === parseInt(secondCategory))?.children.map(subsubcategory => (
-                                                <option key={subsubcategory.id} value={subsubcategory.id}>{subsubcategory.code} </option>
-                                                ))}
-                                            </select>
-                                        )}
-                                    </li>
-                                </ol>
-                            </div>
-                        </li>
-                    </ul>
+                    <select multiple={false} value={firstCategory.code} onChange={handleFirstCategoryChange}>
+                        <option value="">1차 카테고리 선택</option>
+                        {categories.map(category => (
+                        <option key={category.id} value={category.id}>{category.code}</option>
+                        ))}
+                    </select>
+                    {firstCategory && (
+                        <select multiple={false} value={secondCategory.code} onChange={handleSecondCategoryChange}>
+                            <option value="">2차 카테고리 선택</option>
+                            {/* 1차 카테고리에 따라 동적으로 옵션을 불러옴 */}
+                            {categories.find(category => category.id === parseInt(firstCategory))?.children.map(subcategory => (
+                            <option key={subcategory.id} value={subcategory.id}>{subcategory.code}</option>
+                            ))}
+                        </select>
+                    )}
+                    {secondCategory && (
+                        <select  multiple={false} value={thirdCategory.code} onChange={handleThirdCategoryChange}>
+                            <option value="">3차 카테고리 선택</option>
+                            {/* 2차 카테고리에 따라 동적으로 옵션을 불러옴 */}
+                            {categories.find(category => category.id === parseInt(firstCategory))?.children.find(subcategory => subcategory.id === parseInt(secondCategory))?.children.map(subsubcategory => (
+                            <option key={subsubcategory.id} value={subsubcategory.id}>{subsubcategory.code} </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
                 <div className="btn">
                     <button type="button" className="cp-bBtn" onClick={() => handleCategoryini()} ><span>초기화</span></button>
