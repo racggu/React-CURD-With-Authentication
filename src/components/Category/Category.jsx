@@ -6,7 +6,7 @@ function GridModal({ isOpen, onClose, onSave, initialValue  }) {
 
     const handleSave = (clickrow) => {
       onClose();
-      onSave( 'id: ' + clickrow.id  );
+      onSave( clickrow.id );
       onClose(); // Close the modal without saving
     };
 
@@ -59,10 +59,20 @@ const Category = () => {
 	  };
 	
     const closeDialog = () => {
-    dialogRef.current.close();
-    setIsModalOpen(false);
+        dialogRef.current.close();
+        setIsModalOpen(false);
     };
+
     const handleSave = (value) => {
+        for (let i = 0; i < GridData.length; i++) {
+            if (GridData[i].id === value) {
+              console.log(GridData[i])
+              setFirstCategory([GridData[i].firstid]);
+              setSecondCategory([GridData[i].secondid]);
+              setThirdCategory([GridData[i].thirdid]);
+            }
+          }
+
     setModalValue(value); // Save the value received from the modal
     };
 
@@ -116,23 +126,36 @@ const Category = () => {
 
         for (let id in categories) {
             let firstname =  categories[id].code
+            let firstid =  categories[id].id
             if (categories[id].code.indexOf(inputText) !== -1) {
-                tempGridData.push({'id':categories[id].id, 'first': categories[id].code, 'second':'', 'third': ''})
-                
+                tempGridData.push({
+                    'id':categories[id].id, 
+                    'firstid':firstid, 'first': categories[id].code, 
+                    'secondid':'', 'second':'', 
+                    'thirdid':'', 'third': ''})
             }
             if (categories[id].children.length){
                 let obj1 = categories[id].children;
                 for (let id in obj1) {
                     let secondname =  obj1[id].code
+                    let secondid = obj1[id].id
                     if (obj1[id].code.indexOf(inputText) !== -1) {
-                        tempGridData.push({'id':obj1[id].id, 'first': firstname, 'second':secondname, 'third': ''})
+                        tempGridData.push({
+                            'id':secondid, 
+                            'firstid':firstid, 'first': firstname, 
+                            'secondid':secondid, 'second':secondname, 
+                            'thirdid':'', 'third': ''})
                     }
                     if (obj1[id].children.length){
                         let obj2 = obj1[id].children;
                         for (let id in obj2) {
                             let thirdname =  obj2[id].code
                             if (obj2[id].code.indexOf(inputText) !== -1) {
-                                tempGridData.push({'id':obj2[id].id, 'first': firstname, 'second':secondname, 'third': thirdname})
+                                tempGridData.push({
+                                    'id':obj2[id].id, 
+                                    'firstid':firstid, 'first': firstname, 
+                                    'secondid':secondid, 'second':secondname, 
+                                    'thirdid':obj2[id].id, 'third': thirdname})
                             }
                         }
                     }
@@ -142,8 +165,6 @@ const Category = () => {
             
         }
         setGridData(tempGridData)
-        console.log('outva', GridData, tempGridData)
-
     }
 
     const handleInputChange = (e) => {
