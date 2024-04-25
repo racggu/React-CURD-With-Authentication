@@ -1,5 +1,5 @@
 import { useState , useRef} from "react";
-import Table from "../Table/Table";
+
 import * as Net  from "../../api/apiLoging";
 
 
@@ -58,10 +58,7 @@ const MyStore= () =>  {
   return (
     <div>
       <button onClick={openDialog}>Open Dialog</button>
-      <dialog ref={dialogRef}>
-       <Table  isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
-        <button onClick={closeDialog}>Close</button>
-      </dialog>
+
 
       <div className="App">
           <h1>{process.env.REACT_APP_LOGING}</h1>

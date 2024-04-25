@@ -36,9 +36,9 @@ function GridModal({ isOpen, onClose, onSave, initialValue  }) {
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
-    const [firstCategory, setFirstCategory] = useState([]);
-    const [secondCategory, setSecondCategory] = useState([]);
-    const [thirdCategory, setThirdCategory] = useState([]);
+    const [firstCategory, setFirstCategory] = useState('');
+    const [secondCategory, setSecondCategory] = useState('');
+    const [thirdCategory, setThirdCategory] = useState('');
     const [inputText, setInputText] = useState('1');
     const [GridData, setGridData] = useState([]);
     const dialogRef = useRef(null);
@@ -64,8 +64,8 @@ const Category = () => {
     const handleSave = (value) => {
         for (let i = 0; i < GridData.length; i++) {
             if (GridData[i].id === value) {
-              setFirstCategory([GridData[i].firstid]);
-              setSecondCategory([GridData[i].secondid]);
+              setFirstCategory(GridData[i].firstid);
+              setSecondCategory(GridData[i].secondid);
               setThirdCategory([GridData[i].thirdid]);
             }
           }
@@ -84,7 +84,6 @@ const Category = () => {
 			});
 
 			setCategories(data.categories);
-			setFirstCategory(modifiedArr);
 
 			})
 			.catch(error => {
@@ -96,22 +95,22 @@ const Category = () => {
     };
   
     const handleCategoryini = () => {
-      setFirstCategory([]);
-      setSecondCategory([]);
-      setThirdCategory([]);
+      setFirstCategory();
+      setSecondCategory();
+      setThirdCategory();
     };
 
     const handleFirstCategoryChange = (e) => {
       setFirstCategory(e.target.value);
       // 1차 카테고리가 변경될 때 2차, 3차 카테고리 초기화
-      setSecondCategory([]);
-      setThirdCategory([]);
+      setSecondCategory();
+      setThirdCategory();
     };
   
     const handleSecondCategoryChange = (e) => {
       setSecondCategory(e.target.value);
       // 2차 카테고리가 변경될 때 3차 카테고리 초기화
-      setThirdCategory([]);
+      setThirdCategory();
     };
   
     const handleThirdCategoryChange = (e) => {
@@ -173,6 +172,18 @@ const Category = () => {
         dialogRef.current.close();
       };
 
+      function SelectWithOptions({ options, selectedOption, onChange }) {
+        return (
+          <select value={selectedOption} onChange={onChange}>
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        );
+      }
+
 	return (
 		<div className="frmWr">
             <div className="a-sch01">
@@ -188,14 +199,16 @@ const Category = () => {
 
                 </div>
                 <div className="frm">
-                    <select multiple={false} value={firstCategory.code} onChange={handleFirstCategoryChange}>
+
+
+                    <select multiple={false} value={firstCategory} onChange={handleFirstCategoryChange}>
                         <option value="">1차 카테고리 선택</option>
                         {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.code}</option>
                         ))}
                     </select>
                     {firstCategory && (
-                        <select multiple={false} value={secondCategory.code} onChange={handleSecondCategoryChange}>
+                        <select multiple={false} value={secondCategory} onChange={handleSecondCategoryChange}>
                             <option value="">2차 카테고리 선택</option>
                             {/* 1차 카테고리에 따라 동적으로 옵션을 불러옴 */}
                             {categories.find(category => category.id === parseInt(firstCategory))?.children.map(subcategory => (
@@ -204,7 +217,7 @@ const Category = () => {
                         </select>
                     )}
                     {secondCategory && (
-                        <select  multiple={false} value={thirdCategory.code} onChange={handleThirdCategoryChange}>
+                        <select  multiple={false} value={thirdCategory} onChange={handleThirdCategoryChange}>
                             <option value="">3차 카테고리 선택</option>
                             {/* 2차 카테고리에 따라 동적으로 옵션을 불러옴 */}
                             {categories.find(category => category.id === parseInt(firstCategory))?.children.find(subcategory => subcategory.id === parseInt(secondCategory))?.children.map(subsubcategory => (

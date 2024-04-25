@@ -19,6 +19,7 @@ import LoggedUser from "./components/Users/LoggedUser";
 import Operations from "./components/Registration/Operations";
 import { IsValid } from "./components/Registration/Helper/Authenticate";
 import MyStore from "./components/MyStore/MyStore";
+import Modaltest from "./components/Modaltest/Modaltest";
 
 const App = () => {
   const isValid = IsValid();
@@ -36,6 +37,7 @@ const App = () => {
         <BrowserRouter>
           <Navbar />
           <Routes>
+          <Route path="/modaltest" element={<Modaltest />} />
             <Route path="/category" element={<Category />} />
             <Route path="/mystore" element={<MyStore />} />
             <Route path="/page1" element={<Page1 />} />
