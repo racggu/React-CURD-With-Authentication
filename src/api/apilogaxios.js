@@ -17,10 +17,11 @@ export const api_log = async (params) => {
     const isOS = Object.keys(variables).filter(key => variables[key]);
     params.isOS = `${isOS} `
     // ** console.log(process.env.REACT_APP_LOGING, JSON.stringify(params));
-    //axios.defaults.baseURL ='192.168.0.229:5000' // process.env.REACT_APP_LOGING
+    console.log(axios.defaults.baseURL)
+    axios.defaults.baseURL = ''
     //axios.defaults.withCredentials = true;
     try {
-      await axios.post('192.168.0.229:5000', params)
+      await axios.post('http://192.168.0.229:5000', params)
       //return response.data;
     } catch (error) {
       //console.error('Error fetching data:', error);

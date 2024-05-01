@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {api_log}  from "../../api/apilogaxios";
+import {api_log}  from "../../api/apilogfetch";
 
 const AgeCalulation = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
