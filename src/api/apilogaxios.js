@@ -1,26 +1,29 @@
-import axios from 'axios';
-import { APP_API_LOGING_URL } from '../config';
-import { browserName, browserVersion, isMobile, isAndroid, isIOS, CustomView } from "react-device-detect";
-import {  BrowserRouter, Route, Routes  } from 'react-router-dom';
-import { Link, useNavigate } from "react-router-dom";
 
-export default class apilogaxios  {
-    static async post(params) {
-        console.log(APP_API_LOGING_URL)
-        const time = Date.now();
-        console.log(time);
-        //console.log(`${browserName} ${browserVersion}`);       
-        //console.log(`${isMobile} ${isAndroid}`);    
-        params.browser = `${browserName} ${browserVersion}`
-        console.log(useNavigate);
-        console.log(params);  
-        try{ 
-            let response = await axios.post(APP_API_LOGING_URL, params)
-            //return response.data
-        } catch (error) {
-        //응답 실패
-        console.error(error);
-        }
+import axios from 'axios';
+import { browserName, browserVersion, isMobile, isAndroid, isIOS, isWindows, isMacOs} from "react-device-detect";
+
+
+export const api_log = async (params) => {
+    const time = Date.now();
+    params.time = `${time}`  // log time add
+    params.browser = `${browserName} ${browserVersion}`  // user browser
+    params.isMobile = `${isMobile} `
+    const variables = {
+      isAndroid: isAndroid,
+      isIOS: isIOS,
+      isWindows: isWindows,
+      isMacOs: isMacOs
+    };
+    const isOS = Object.keys(variables).filter(key => variables[key]);
+    params.isOS = `${isOS} `
+    // ** console.log(process.env.REACT_APP_LOGING, JSON.stringify(params));
+    //axios.defaults.baseURL ='192.168.0.229:5000' // process.env.REACT_APP_LOGING
+    //axios.defaults.withCredentials = true;
+    try {
+      await axios.post('192.168.0.229:5000', params)
+      //return response.data;
+    } catch (error) {
+      //console.error('Error fetching data:', error);
+      //throw error; // 에러를 상위로 전파
     }
-    
-}
+};

@@ -1,9 +1,9 @@
-//user front source 
-
 import axios from 'axios';
 
-
-export default class WebService  {
+//const BASE_URL = window._env_.APP_BASE_URL + window._env_.APP_API_VERSION;
+//axios.defaults.baseURL = BASE_URL
+//console.log('-----'+a)
+export default class WebService {
 	static async post(action, params) {
 		let response = await axios.post(action, params)
 		return response.data

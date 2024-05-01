@@ -1,5 +1,5 @@
 import { useState } from "react";
-import apilogaxios from "../../api/apilogaxios";
+import {api_log}  from "../../api/apilogaxios";
 
 const AgeCalulation = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -26,9 +26,9 @@ const AgeCalulation = () => {
     setDateOfBirth(event.target.value);
   };
 
-  const handlePostRequest = () => {
+  const handlePostRequest = (event) => {
 
-   apilogaxios.post({  username: "devstone",  password: "123452342"  });
+    api_log({url: window.location.href, action : event.target.innerText})
 
 
   };
@@ -61,7 +61,7 @@ const AgeCalulation = () => {
         </div>
       </div>
       <div>
-      <button onClick={apilogaxios.post({  username: "devstone",  password: "123452342"  })}>POST 요청 보내기</button>
+      <button onClick={handlePostRequest}>POST 요청 보내기</button>
     </div>
     </>
   );
