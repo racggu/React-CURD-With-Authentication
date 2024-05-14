@@ -1,36 +1,66 @@
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types';
+import React from 'react';
+import ProductMediaManager from '../../components/admin/catalog/productEdit/media/ProductMediaManager';
+import { Card } from '../../components/admin/cms/Card';
 
-// Import React FilePond
-import { FilePond, registerPlugin } from 'react-filepond'
+export default function Media({ id, product, productImageUploadUrl }) {
+  const image = product?.image;
+  let gallery = product?.gallery || [];
 
-// Import FilePond styles
-import 'filepond/dist/filepond.min.css'
-
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
-
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
-
-function Table () {
-	const [files, setFiles] = useState([])
-	return (
-	  <div className="App">
-		<FilePond
-		  files={files}
-		  onupdatefiles={setFiles}
-		  allowMultiple={true}
-		  maxFiles={3}
-		  server="http://localhost:5000"
-		  name="files" /* sets the file input name, it's filepond by default */
-		  labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-		/>
-	  </div>
-	);
+  if (image) {
+    gallery = [image].concat(gallery);
+  }
+  return (
+    <Card title="Media">
+      <Card.Session>
+        <ProductMediaManager
+          id={id || 'images'}
+          productImages={gallery}
+          productImageUploadUrl={productImageUploadUrl}
+        />
+      </Card.Session>
+    </Card>
+  );
 }
-export default Table;
+
+Media.propTypes = {
+  id: PropTypes.string.isRequired,
+  product: PropTypes.shape({
+    gallery: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired
+      })
+    ),
+    image: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired
+    })
+  }),
+  productImageUploadUrl: PropTypes.string.isRequired
+};
+
+Media.defaultProps = {
+  product: null
+};
+
+export const layout = {
+  areaId: 'leftSide',
+  sortOrder: 15
+};
+
+export const query = `
+  query Query {
+    product(id: getContextValue("productId", null)) {
+      image {
+        id: uuid
+        url
+      }
+      gallery {
+        id: uuid
+        url
+      }
+    }
+    productImageUploadUrl: url(routeId: "imageUpload", params: [{key: "0", value: ""}])
+  }
+`;
